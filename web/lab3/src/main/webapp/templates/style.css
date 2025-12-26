@@ -26,7 +26,7 @@
   --radius: 22px;
   --radius-sm: 14px;
 
-  /* canvas palette (read in plot.js) */
+
   --plot-area-fill: rgba(239,68,68,0.24);
   --plot-area-stroke: rgba(220,38,38,0.95);
   --plot-axis: rgba(15,23,42,0.70);
@@ -70,7 +70,7 @@ html[data-theme="dark"]{
   --plot-point-stroke: rgba(226,232,240,0.9);
 }
 
-/* Анимация смены темы */
+
 html.theme-changing,
 html.theme-changing * {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
@@ -93,7 +93,7 @@ html.theme-changing * {
 
 a{ color: inherit; text-decoration: none; }
 
-/* page container */
+
 .page{
   max-width: 1180px;
   margin: 0 auto;
@@ -182,7 +182,7 @@ html[data-theme="dark"] .topbar::after{
   background-repeat: no-repeat;
   background-position: center;
   user-select: none;
-  /* Фоновое изображение устанавливается через JavaScript в theme.js */
+
 }
 
 .brand-text{
@@ -280,7 +280,7 @@ html[data-theme="dark"] .theme-toggle{
   transform: translateY(0);
 }
 
-/* cards */
+
 .card{
   background: var(--surface);
   border: 1px solid var(--border);
@@ -362,7 +362,7 @@ html[data-theme="dark"] .theme-toggle{
   margin-top: 18px;
 }
 
-/* app form layout */
+
 .form-grid{
   display: grid;
   grid-template-columns: minmax(280px, 0.85fr) minmax(400px, 1.15fr);
@@ -464,7 +464,7 @@ html[data-theme="dark"] .badge.badge-bad{
   font-size: 0.92rem;
 }
 
-/* PrimeFaces overrides (PF8) */
+
 .ui-inputfield,
 .ui-inputtext,
 .ui-selectonemenu{
@@ -553,7 +553,7 @@ html[data-theme="dark"] .ui-selectonemenu{
 }
 
 
-/* PrimeFaces DataTable + paginator (force our theme, even if PF theme loads after) */
+
 .page .ui-datatable,
 .page .ui-datatable .ui-datatable-tablewrapper,
 .page .ui-datatable table{
@@ -613,7 +613,7 @@ html[data-theme="dark"] .page .ui-datatable tbody tr:nth-child(even){
   background: rgba(99,102,241,0.10) !important;
 }
 
-/* paginator */
+
 .page .ui-paginator{
   border-top: 1px solid rgba(148,163,184,0.22) !important;
   background: rgba(255,255,255,0.35) !important;
@@ -647,7 +647,7 @@ html[data-theme="dark"] .page .ui-paginator .ui-paginator-last{
   border-color: rgba(99,102,241,0.45) !important;
 }
 
-/* animations */
+
 @keyframes pageIn{
   from{ opacity: 0; transform: translateY(10px); }
   to{ opacity: 1; transform: translateY(0); }
@@ -658,7 +658,7 @@ html[data-theme="dark"] .page .ui-paginator .ui-paginator-last{
   to{ opacity: 1; transform: translateY(0); }
 }
 
-/* Start page styles */
+
 .start-page{
   min-height: 100vh;
   display: flex;
@@ -790,7 +790,7 @@ html[data-theme="dark"] .start-button::before{
   to{ opacity: 1; transform: translateY(0); }
 }
 
-/* responsive */
+
 @media (max-width: 1024px){
   .form-grid{ grid-template-columns: 1fr; }
   .hero-grid{ grid-template-columns: 1fr; }
