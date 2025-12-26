@@ -27,16 +27,14 @@
         };
     }
 
-    // Масштаб для статичной сетки (фиксированный)
-    // Используем минимальное из width/2 и height/2 для правильного отображения на обеих осях
     function gridScale() {
         const maxDimension = Math.min(canvas.width / 2 - padding, canvas.height / 2 - padding);
         return maxDimension / (GRID_SPAN / 2);
     }
 
-    // Масштаб для области (зависит от текущего R)
+
     function areaScale() {
-        return gridScale(); // Используем тот же масштаб, что и сетка
+        return gridScale(); 
     }
 
     function center() {
@@ -51,15 +49,13 @@
 
     function fromCanvas(evt) {
         const rect = canvas.getBoundingClientRect();
-        // Учитываем масштабирование canvas (если CSS изменяет размер)
+
         const scaleX = canvas.width / rect.width;
         const scaleY = canvas.height / rect.height;
         
-        // Преобразуем координаты клика в координаты canvas
         const clickX = (evt.clientX - rect.left) * scaleX;
         const clickY = (evt.clientY - rect.top) * scaleY;
         
-        // Преобразуем координаты canvas в координаты графика
         const k = gridScale();
         const c = center();
         const x = (clickX - c.x) / k;
@@ -77,16 +73,13 @@
         ctx.strokeStyle = t.axis;
         ctx.lineWidth = 1.5;
 
-        // Оси координат (более толстые)
         ctx.beginPath();
         ctx.moveTo(0, c.y); ctx.lineTo(canvas.width, c.y);
         ctx.moveTo(c.x, canvas.height); ctx.lineTo(c.x, 0);
         ctx.stroke();
         
-        // Восстанавливаем толщину для линий сетки
         ctx.lineWidth = 0.5;
 
-        // Статичная сетка с шагом 1 от -5 до 5
         const ticks = [];
         for (let i = GRID_MIN; i <= GRID_MAX; i++) {
             ticks.push(i);
@@ -95,39 +88,35 @@
         ctx.fillStyle = t.axis;
         ctx.font = '12px ' + t.fontFamily;
 
-        // Рисуем деления и подписи
         ticks.forEach((tick) => {
             const px = c.x + tick * k;
             const py = c.y - tick * k;
 
-            // Деления на осях - линии на всю ширину графика
             ctx.beginPath();
             ctx.moveTo(px, 0); ctx.lineTo(px, canvas.height);
             ctx.moveTo(0, py); ctx.lineTo(canvas.width, py);
             ctx.stroke();
 
-            // Подписи значений
             if (tick !== 0) {
                 ctx.fillText(tick.toString(), px - 6, c.y + 14);
                 ctx.fillText(tick.toString(), c.x + 6, py + 4);
             }
         });
 
-        // Подписи осей
         ctx.fillText('x', canvas.width - padding / 2, c.y - 6);
         ctx.fillText('y', c.x + 6, padding / 2);
     }
 
     function drawArea() {
         const t = readTheme();
-        const k = areaScale(); // Используем масштаб для области
+        const k = areaScale(); 
         const c = center();
 
         ctx.fillStyle = t.areaFill;
         ctx.strokeStyle = t.areaStroke;
         ctx.lineWidth = 1;
 
-        // Первая четверть: четверть окружности радиусом R/2
+
         ctx.beginPath();
         ctx.moveTo(c.x, c.y);
         ctx.arc(c.x, c.y, k * currentR / 2, 1.5 * Math.PI, 2 * Math.PI);
@@ -136,7 +125,7 @@
         ctx.fill();
         ctx.stroke();
 
-        // Третья четверть: прямоугольник от (0,0) до (-R/2, -R)
+
         ctx.beginPath();
         ctx.moveTo(c.x, c.y);
         ctx.lineTo(c.x - k * currentR / 2, c.y);
@@ -146,7 +135,7 @@
         ctx.fill();
         ctx.stroke();
 
-        // Четвертая четверть: треугольник (0,0), (R,0), (0,-R)
+
         ctx.beginPath();
         ctx.moveTo(c.x, c.y);
         ctx.lineTo(c.x + k * currentR, c.y);
