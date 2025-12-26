@@ -1,0 +1,158 @@
+<!DOCTYPE html [
+        <!ENTITY nbsp "&#160;">
+]>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>HitCheck — приложение</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/templates/style.css"/>
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/templates/main.css"/>
+    <h:outputScript library="js" name="plot.js"/>
+    <h:outputScript library="js" name="notifications.js"/>
+</h:head>
+
+<h:body>
+<div class="page">
+    <div class="topbar">
+        <div class="brand">
+            <div class="logo-img"></div>
+            <div class="brand-text">
+                <div class="brand-subtitle">Студент: Пингачева Л.С. • Группа: P3218 • Вариант: 18423</div>
+            </div>
+        </div>
+
+        <div class="topbar-right">
+            <h:form>
+                <p:commandButton value="Старт" action="go-index" icon="pi pi-home" styleClass="btn-ghost" ajax="false"/>
+            </h:form>
+
+            <button class="theme-toggle" type="button" aria-label="Переключить тему">
+                <span class="theme-toggle-icon" aria-hidden="true">🌙</span>
+            </button>
+        </div>
+    </div>
+
+    <h:form id="mainForm">
+        <div class="form-grid">
+            <div class="card">
+                <h3>Координаты</h3>
+
+                <div class="field">
+                    <p:outputLabel for="xInput" value="X (−5 .. 3)" styleClass="label"/>
+                    <p:inputText id="xInput" value="#{checkPointBean.xInput}"
+                                 placeholder="Например, 1.25" style="width: 100%"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel value="Y" styleClass="label"/>
+                    <h:panelGroup id="yButtons" layout="block" styleClass="controls">
+                        <p:commandButton value="-3" actionListener="#{checkPointBean.selectY('-3')}"
+                                         styleClass="y-btn #{checkPointBean.yValue != null and checkPointBean.yValue.toString() eq '-3' ? 'is-active' : ''}"
+                                         update="yButtons" process="@this"/>
+                        <p:commandButton value="-2" actionListener="#{checkPointBean.selectY('-2')}"
+                                         styleClass="y-btn #{checkPointBean.yValue != null and checkPointBean.yValue.toString() eq '-2' ? 'is-active' : ''}"
+                                         update="yButtons" process="@this"/>
+                        <p:commandButton value="-1" actionListener="#{checkPointBean.selectY('-1')}"
+                                         styleClass="y-btn #{checkPointBean.yValue != null and checkPointBean.yValue.toString() eq '-1' ? 'is-active' : ''}"
+                                         update="yButtons" process="@this"/>
+                        <p:commandButton value="0" actionListener="#{checkPointBean.selectY('0')}"
+                                         styleClass="y-btn #{checkPointBean.yValue != null and checkPointBean.yValue.toString() eq '0' ? 'is-active' : ''}"
+                                         update="yButtons" process="@this"/>
+                        <p:commandButton value="1" actionListener="#{checkPointBean.selectY('1')}"
+                                         styleClass="y-btn #{checkPointBean.yValue != null and checkPointBean.yValue.toString() eq '1' ? 'is-active' : ''}"
+                                         update="yButtons" process="@this"/>
+                        <p:commandButton value="2" actionListener="#{checkPointBean.selectY('2')}"
+                                         styleClass="y-btn #{checkPointBean.yValue != null and checkPointBean.yValue.toString() eq '2' ? 'is-active' : ''}"
+                                         update="yButtons" process="@this"/>
+                        <p:commandButton value="3" actionListener="#{checkPointBean.selectY('3')}"
+                                         styleClass="y-btn #{checkPointBean.yValue != null and checkPointBean.yValue.toString() eq '3' ? 'is-active' : ''}"
+                                         update="yButtons" process="@this"/>
+                        <p:commandButton value="4" actionListener="#{checkPointBean.selectY('4')}"
+                                         styleClass="y-btn #{checkPointBean.yValue != null and checkPointBean.yValue.toString() eq '4' ? 'is-active' : ''}"
+                                         update="yButtons" process="@this"/>
+                        <p:commandButton value="5" actionListener="#{checkPointBean.selectY('5')}"
+                                         styleClass="y-btn #{checkPointBean.yValue != null and checkPointBean.yValue.toString() eq '5' ? 'is-active' : ''}"
+                                         update="yButtons" process="@this"/>
+                    </h:panelGroup>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="rMenu" value="R" styleClass="label"/>
+                    <p:selectOneMenu id="rMenu" value="#{checkPointBean.rValue}" style="width: 140px">
+                        <f:selectItems value="#{checkPointBean.allowedR}" var="r" itemValue="#{r}" itemLabel="#{r}"/>
+                        <p:ajax update="plot-panel results-table"/>
+                    </p:selectOneMenu>
+                </div>
+
+                <p:commandButton value="Проверить" actionListener="#{checkPointBean.submit}"
+                                 icon="pi pi-check" update="results-table plot-panel" process="@form"/>
+            </div>
+
+            <div class="card canvas-wrapper">
+                <h3>График</h3>
+                <p:outputPanel id="plot-panel" styleClass="plot">
+                    <canvas id="plotCanvas" width="600" height="600"></canvas>
+                    <h:outputScript>
+                        var plotPoints = #{pointBean.pointsJson(checkPointBean.rValue)};
+                        AreaPlot.init('plotCanvas', 'sendCanvasPoint', #{checkPointBean.rValue}, plotPoints);
+                    </h:outputScript>
+                </p:outputPanel>
+
+                <p:remoteCommand name="sendCanvasPointLogic"
+                                 actionListener="#{checkPointBean.submitFromCanvas(param.clickX, param.clickY)}"
+                                 update="results-table plot-panel" process="@this"/>
+
+                <h:outputScript target="body">
+                    window.sendCanvasPoint = function(params){
+                        var x = params.find(p=>p.name==='clickX').value;
+                        var y = params.find(p=>p.name==='clickY').value;
+                        sendCanvasPointLogic([{name:'clickX',value:x},{name:'clickY',value:y}]);
+                    }
+                </h:outputScript>
+            </div>
+        </div>
+
+        <div class="card table-wrapper">
+            <h3>История проверок</h3>
+            <p:commandButton value="Очистить историю" actionListener="#{checkPointBean.clearHistory}"
+                             icon="pi pi-trash" update="results-table plot-panel"
+                             process="@this" styleClass="mb-3"/>
+            <p:dataTable id="results-table" value="#{pointBean.points}" var="res"
+                         paginator="true" rows="8" rowsPerPageTemplate="5,8,12"
+                         sortBy="#{res.createdAt}" sortOrder="descending" style="width:100%"
+                         emptyMessage="Пока нет результатов. Добавьте точку."
+                         first="#{pointBean.firstRow}" rowIndexVar="rowIndex">
+                <p:column headerText="#">
+                    <h:outputText value="#{pointBean.getRowNumber(rowIndex)}"/>
+                </p:column>
+                <p:column headerText="X">
+                    <h:outputText value="#{pointBean.formatBigDecimal(res.x)}"/>
+                </p:column>
+                <p:column headerText="Y">
+                    <h:outputText value="#{pointBean.formatBigDecimal(res.y)}"/>
+                </p:column>
+                <p:column headerText="R">
+                    <h:outputText value="#{pointBean.formatBigDecimal(res.r)}"/>
+                </p:column>
+                <p:column headerText="Попадание">
+                    <h:outputText value="#{res.hit ? 'Да' : 'Нет'}"
+                                  styleClass="#{res.hit ? 'badge badge-ok' : 'badge badge-bad'}"/>
+                </p:column>
+                <p:column headerText="Время выполнения (мкс)">
+                    <h:outputText value="#{res.executionTime != null ? res.executionTime : 'N/A'}"/>
+                </p:column>
+                <p:column headerText="Время">
+                    <h:outputText value="#{pointBean.formatDateTime(res.createdAt)}"/>
+                </p:column>
+            </p:dataTable>
+        </div>
+    </h:form>
+</div>
+
+<script src="#{request.contextPath}/templates/theme.js"></script>
+</h:body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html [
+        <!ENTITY nbsp "&#160;">
+]>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>HitCheck — старт</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/templates/style.css"/>
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/templates/main.css"/>
+</h:head>
+
+<h:body>
+<div class="start-page">
+    <div class="start-clock-container">
+        <h:outputText id="startClock" value="" styleClass="start-clock"/>
+    </div>
+
+    <div class="start-info-card">
+        <h2 class="start-title">Веб ЛР 3</h2>
+        <div class="start-student-info">
+            <div class="start-info-row">
+                <strong>Студент:</strong> <span>Пингачева Л.С.</span>
+            </div>
+            <div class="start-info-row">
+                <strong>Группа:</strong> <span>P3218</span>
+            </div>
+            <div class="start-info-row">
+                <strong>Вариант:</strong> <span>18423</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="start-action">
+        <h:form>
+            <p:commandButton value="Проверить точку" action="go-app" 
+                           ajax="false" styleClass="start-button"/>
+        </h:form>
+    </div>
+
+    <div class="start-theme-toggle">
+        <button class="theme-toggle" type="button" aria-label="Переключить тему">
+            <span class="theme-toggle-icon" aria-hidden="true">🌙</span>
+        </button>
+    </div>
+</div>
+
+<script src="#{request.contextPath}/templates/theme.js"></script>
+
+<h:outputScript target="body">
+    (function updateStartClock(){
+        var el = document.getElementById("startClock");
+        if (el) {
+            var now = new Date();
+            var timeStr = now.toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit', second: '2-digit'});
+            el.textContent = timeStr;
+        }
+        setTimeout(updateStartClock, 9000);
+    })();
+</h:outputScript>
+</h:body>
+</html>
