@@ -124,10 +124,9 @@ public class CheckPointBean implements Serializable {
         }
         try {
             String trimmed = raw.trim();
-            // Заменяем запятую на точку для обработки дробных чисел с запятой
             trimmed = trimmed.replace(',', '.');
             BigDecimal result = new BigDecimal(trimmed);
-            // Для нуля возвращаем BigDecimal.ZERO, чтобы избежать 0E-20
+            
             if (result.compareTo(BigDecimal.ZERO) == 0) {
                 return BigDecimal.ZERO;
             }
